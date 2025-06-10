@@ -1,0 +1,36 @@
+/**
+ * Main SCSS file
+ * Using Tailwind CSS for utility classes
+ */
+
+// Import custom component styles - must be first
+@use 'components/index';
+
+/* stylelint-disable at-rule-no-unknown */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// Custom components layer
+@layer components {
+  .app-container {
+    @apply max-w-[1200px] mx-auto p-md font-sans border border-border;
+  
+    header {
+      @apply mb-lg text-center bg-secondary p-md;
+  
+      h1 {
+        @apply text-primary font-bold;
+      }
+    }
+  
+    main {
+      @apply min-h-[400px] p-md bg-light rounded-md mb-lg;
+    }
+  
+    footer {
+      @apply text-center p-md text-text/70;
+    }
+  }
+}
+/* stylelint-enable at-rule-no-unknown */

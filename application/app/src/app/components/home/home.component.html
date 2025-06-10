@@ -1,0 +1,37 @@
+<div class="home-container">
+  <h2>{{ welcomeMessage }}</h2>
+  
+  <div class="features-section">
+    <h3>Frontend Features</h3>
+    <ul>
+      @for (feature of features; track feature) {
+        <li>{{ feature }}</li>
+      }
+    </ul>
+    
+    @if (apiFeatures.length > 0) {
+      <h3>Backend Features</h3>
+      <ul>
+        @for (feature of apiFeatures; track feature) {
+          <li>{{ feature }}</li>
+        }
+      </ul>
+    }
+  </div>
+  
+  @if (apiInfo) {
+    <div class="api-info">
+      <h3>API Info</h3>
+      <div class="info-container">
+        <p><strong>Name:</strong> {{ apiInfo.name }}</p>
+        <p><strong>Version:</strong> {{ apiInfo.version }}</p>
+        <p><strong>Symfony Version:</strong> {{ apiInfo.symfony_version }}</p>
+        <p><strong>PHP Version:</strong> {{ apiInfo.php_version }}</p>
+      </div>
+    </div>
+  }
+  
+  <div class="actions">
+    <button class="btn btn-primary">Get Started</button>
+  </div>
+</div> 

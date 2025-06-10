@@ -1,0 +1,32 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+    prefix: /
+
+api:
+    resource: ../src/Controller/Api/
+    type: attribute
+    prefix: /api
+
+# Define routes for the API
+api_info:
+    path: /api/info
+    controller: App\Controller\Api\InfoController::index
+    methods: [GET]
+
+api_login:
+    path: /api/login
+    controller: App\Controller\Api\SecurityController::login
+    methods: [POST]
+
+api_register:
+    path: /api/register
+    controller: App\Controller\Api\SecurityController::register
+    methods: [POST]
+
+api_user:
+    path: /api/user
+    controller: App\Controller\Api\UserController::current
+    methods: [GET] 
