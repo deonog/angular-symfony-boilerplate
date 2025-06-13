@@ -62,7 +62,7 @@ RUN mkdir /var/run/sshd \
     && sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
 # Expose ports
-EXPOSE 80 4200 8888 22
+EXPOSE 80 8888 22
 
 # Set working directory
 WORKDIR /var/www/html/
