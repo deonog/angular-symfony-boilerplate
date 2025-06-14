@@ -47,7 +47,7 @@
               }
             ],
             "styles": [
-              "src/assets/build/styles.css"
+              "src/scss/main.scss"
             ],
             "scripts": []
           },
