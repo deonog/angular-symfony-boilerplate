@@ -14,6 +14,8 @@ This project is a boilerplate for Angular and Symfony applications, set up with 
 ### Prerequisites
 
 - Docker and Docker Compose
+- Node.js and npm
+- PHP 8.3+
 
 ### Installation
 
@@ -23,7 +25,7 @@ git clone https://github.com/yourusername/angular-symfony-boilerplate.git
 cd angular-symfony-boilerplate
 ```
 
-2. Start the Docker containers:
+2. Start the Docker containers (Symfony backend and MySQL):
 ```bash
 docker-compose up -d
 ```
@@ -32,6 +34,54 @@ docker-compose up -d
    - Frontend: http://localhost:4200
    - Backend API: http://localhost:80/api
 
+### Development Workflow
+
+#### Backend (Symfony)
+The Symfony application runs in Docker and is accessible at http://localhost:80
+
+To access the Docker container:
+```bash
+docker exec -it angular-symfony-apache bash
+cd /var/www/html
+composer install
+```
+
+#### Frontend (Angular)
+The Angular application runs locally for better development experience:
+
+1. Navigate to the Angular app directory:
+```bash
+cd application/app
+```
+
+2. Install dependencies (if not already done):
+```bash
+npm install
+```
+
+3. Start the development server:
+```bash
+# For local development only:
+npm start
+
+# OR for network access:
+ng serve --host 0.0.0.0
+```
+
+The development server will start with hot-reload enabled. The Angular app will be available at http://localhost:4200.
+
+Note: Use `ng serve --host 0.0.0.0` if you need to access the application from other devices on your network.
+
+### Stopping the Application
+
+1. Stop the Angular development server:
+   - Press `Ctrl + C` in the terminal where Angular is running
+
+2. Stop the Docker containers:
+```bash
+docker-compose down
+```
+
 ## Project Structure
 
 - `/application/app` - Angular application
@@ -39,29 +89,6 @@ docker-compose up -d
 - `/docker-apache` - Apache configuration
 - `/docker-mysql` - MySQL configuration
 
-## Development
-
-### Frontend (Angular)
-
-The Angular application is located in the `/application/app` directory.
-
-```bash
-docker exec -it angular-symfony-apache bash
-cd /var/www/html/app
-npm install
-npm start
-```
-
-### Backend (Symfony)
-
-The Symfony application is located in the `/application/src` directory.
-
-```bash
-docker exec -it angular-symfony-apache bash
-cd /var/www/html
-composer install
-```
-
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details. # angular-symfony-boilerplate
+This project is licensed under the MIT License - see the LICENSE file for details.
