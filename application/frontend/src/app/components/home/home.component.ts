@@ -13,11 +13,12 @@ export class HomeComponent implements OnInit {
   
   welcomeMessage = 'Welcome to the Angular Symfony Boilerplate!';
   features: string[] = [
-    'Angular 18+ with standalone components',
-    'Symfony 7+ backend',
-    'TypeScript support',
-    'SASS styling',
-    'Docker containerization'
+    'Angular 19 with standalone components',
+    'Symfony 7.1 backend API',
+    'TypeScript strict mode',
+    'Tailwind CSS styling',
+    'Docker containerization',
+    'JWT authentication ready'
   ];
   apiInfo: any;
   apiFeatures: string[] = [];

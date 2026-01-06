@@ -3,34 +3,119 @@
  * Using Tailwind CSS for utility classes
  */
 
-// Import custom component styles - must be first
 @use 'components/index';
 
-/* stylelint-disable at-rule-no-unknown */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-// Custom components layer
+@layer base {
+  body {
+    @apply bg-background text-text font-sans antialiased;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold text-text;
+  }
+
+  a {
+    @apply text-primary hover:text-primary-dark transition-colors;
+  }
+}
+
 @layer components {
   .app-container {
-    @apply max-w-[1200px] mx-auto p-md font-sans border border-border;
+    @apply min-h-screen flex flex-col;
   
     header {
-      @apply mb-lg text-center bg-secondary p-md;
+      @apply bg-primary text-white py-lg px-xl shadow-md;
   
       h1 {
-        @apply text-primary font-bold;
+        @apply text-2xl md:text-3xl font-bold text-white m-0;
       }
     }
   
     main {
-      @apply min-h-[400px] p-md bg-light rounded-md mb-lg;
+      @apply flex-1 p-lg md:p-xl bg-background-alt;
     }
   
     footer {
-      @apply text-center p-md text-text/70;
+      @apply bg-secondary-dark text-text-muted text-center py-md px-lg text-sm;
     }
   }
+
+  .home-container {
+    @apply max-w-4xl mx-auto;
+
+    h2 {
+      @apply text-2xl md:text-3xl font-bold text-text mb-lg;
+    }
+
+    h3 {
+      @apply text-lg font-semibold text-text mb-md mt-lg;
+    }
+
+    .features-section {
+      @apply bg-white rounded-lg shadow-sm p-lg mb-lg border border-border;
+
+      ul {
+        @apply list-none p-0 m-0 space-y-sm;
+
+        li {
+          @apply flex items-center text-text py-xs;
+
+          &::before {
+            content: '✓';
+            @apply text-success font-bold mr-sm;
+          }
+        }
+      }
+    }
+
+    .api-info {
+      @apply bg-white rounded-lg shadow-sm p-lg mb-lg border border-border;
+
+      .info-container {
+        @apply bg-secondary rounded-md p-md;
+
+        p {
+          @apply text-text mb-xs last:mb-0;
+
+          strong {
+            @apply text-text font-medium mr-xs;
+          }
+        }
+      }
+    }
+
+    .actions {
+      @apply mt-xl text-center;
+    }
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center px-lg py-sm rounded-md font-medium transition-all duration-200 cursor-pointer border-0;
+
+    &:focus {
+      @apply outline-none ring-2 ring-offset-2;
+    }
+
+    &:disabled {
+      @apply opacity-50 cursor-not-allowed;
+    }
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary-dark focus:ring-primary;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-text hover:bg-secondary-dark focus:ring-secondary-dark;
+  }
+
+  .btn-accent {
+    @apply bg-accent text-white hover:opacity-90 focus:ring-accent;
+  }
 }
-/* stylelint-enable at-rule-no-unknown */
