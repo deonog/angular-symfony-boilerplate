@@ -1,70 +1,40 @@
-# OS Files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Docker
-.docker/
-docker-compose.override.yml
-*.log
-
-# Angular
-application/app/node_modules/
-application/app/dist/
-application/app/.angular/
-application/app/.sass-cache/
-application/app/connect.lock
-application/app/coverage/
-application/app/libpeerconnection.log
-application/app/npm-debug.log*
-application/app/yarn-error.log
-application/app/testem.log
-application/app/typings/
-
-# Symfony
-application/var/
-application/vendor/
-application/.env.local
-application/.env.local.php
-application/.env.*.local
-
-# Composer
+# Dependencies
+node_modules/
 vendor/
-composer.lock
-
-# Database
-application/dump.sql
+**/node_modules/
+**/vendor/
+**/.pnpm-store/
+.pnpm-store/
 
 # IDE
-.vscode/
 .idea/
+.vscode/
 *.swp
 *.swo
-*~
 
-# Build artifacts
-application/app/src/assets/build/*.css
-application/app/src/assets/build/*.js
-application/app/src/assets/build/*.map
-application/app/src/assets/build/manifest.json
-application/app/src/assets/build/entrypoints.json
+# OS
+.DS_Store
+Thumbs.db
 
 # Logs
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+pnpm-debug.log*
 
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
+# Environment files
+.env.local
+.env.*.local
+**/.env.local
+**/.env.*.local
 
-# Temporary folders
-tmp/
-temp/ 
+# Build outputs
+**/dist/
+**/var/
+**/out-tsc/
+
+# Cache
+**/.angular/
+**/.cache/
+
+# Docker volumes (local)
+mysql_data/

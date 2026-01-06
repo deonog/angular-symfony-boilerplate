@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 import { CurrencyPipe } from '@angular/common';
 import {
   HTTP_INTERCEPTORS,

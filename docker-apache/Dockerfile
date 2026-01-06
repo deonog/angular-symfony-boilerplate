@@ -8,16 +8,16 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libzip-dev \
     zip \
     unzip \
-    nodejs \
-    npm \
     openssh-server \
     sudo \
     && rm -rf /var/lib/apt/lists/*
 
+
 # Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
 # Install Xdebug for development
 RUN pecl install xdebug \
@@ -42,21 +42,17 @@ RUN useradd -m -s /bin/bash user \
     && usermod -aG sudo user \
     && echo "user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Copy application files
-COPY --chown=user:user ./application /var/www/html/
+# Copy API files only
+COPY --chown=user:user ./application/api /var/www/html/api/
 
 # Set environment for development
 ENV APP_ENV=dev
 
-# Install Composer dependencies (including dev dependencies for development)
-RUN cd /var/www/html && composer install
-
-# Install Node.js dependencies and build
-RUN cd /var/www/html/app && npm install
-RUN cd /var/www/html/app && npm run buildpack || echo 'Buildpack completed with warnings'
+# Install Composer dependencies
+RUN cd /var/www/html/api && composer update --no-interaction --optimize-autoloader
 
 # Configure SSH
-RUN mkdir /var/run/sshd \
+RUN mkdir -p /var/run/sshd \
     && echo 'user:password' | chpasswd \
     && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
     && sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
@@ -74,4 +70,4 @@ RUN echo '#!/bin/bash' > /start.sh \
     && chmod +x /start.sh
 
 # Start services
-CMD ["/start.sh"] 
+CMD ["/start.sh"]

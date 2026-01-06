@@ -10,17 +10,22 @@ services:
       - mysql
     ports:
       - "8888:8888"
-      - "80:80"
+      - "90:80"
       - "22:22"
     volumes:
-      - ./application:/var/www/html
+      - ./application/api:/var/www/html/api
+      - api_vendor:/var/www/html/api/vendor
+    environment:
+      - APP_ENV=dev
+      - DATABASE_URL=mysql://app:app@mysql:3306/app?serverVersion=8.0
+
   mysql:
     build: docker-mysql
     container_name: angular-symfony-mysql
-    command: [ "--default-authentication-plugin=mysql_native_password", "--sql-mode=NO_ENGINE_SUBSTITUTION" ]
+    command: ["--default-authentication-plugin=mysql_native_password", "--sql-mode=NO_ENGINE_SUBSTITUTION"]
     volumes:
-      - ./application/dump.sql:/docker-entrypoint-initdb.d/1-dump.sql
-      - ./export:/export
+      - mysql_data:/var/lib/mysql
+      - ./application/api/migrations:/docker-entrypoint-initdb.d
     ports:
       - "3307:3306"
     environment:
@@ -30,3 +35,22 @@ services:
       MYSQL_PASSWORD: app
       MYSQL_ROOT_HOST: "%"
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+
+  # Angular frontend development server
+  frontend:
+    image: node:20-alpine
+    container_name: angular-symfony-frontend
+    working_dir: /app
+    volumes:
+      - ./application/frontend:/app
+      - frontend_node_modules:/app/node_modules
+    ports:
+      - "4200:4200"
+    command: sh -c "corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install && pnpm run start"
+    depends_on:
+      - apache
+
+volumes:
+  mysql_data:
+  api_vendor:
+  frontend_node_modules:

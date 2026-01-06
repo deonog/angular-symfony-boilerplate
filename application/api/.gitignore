@@ -1,0 +1,35 @@
+# Dependencies
+/vendor/
+
+# Symfony
+/var/
+/public/bundles/
+
+# Environment
+/.env.local
+/.env.local.php
+/.env.*.local
+
+# Secrets
+/config/secrets/prod/prod.decrypt.private.php
+
+# JWT keys
+/config/jwt/*.pem
+
+# PHPUnit
+.phpunit.result.cache
+
+# PHPStan
+phpstan.neon
+
+# Composer
+composer.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
