@@ -8,12 +8,9 @@ A modern monorepo boilerplate with Angular 19 frontend and Symfony 7.1 backend A
 - [Project Structure](#-project-structure)
 - [Complete Setup Guide](#-complete-setup-guide)
   - [Prerequisites](#prerequisites)
-  - [Step 1: Clone the Repository](#step-1-clone-the-repository)
-  - [Step 2: Configure Environment Variables](#step-2-configure-environment-variables)
-  - [Step 3: Build and Start Docker](#step-3-build-and-start-docker)
-  - [Step 4: Generate JWT Keys](#step-4-generate-jwt-keys)
-  - [Step 5: Run Database Migrations](#step-5-run-database-migrations-optional)
-  - [Step 6: Access the Application](#step-6-access-the-application)
+  - [Quick Setup (Recommended)](#quick-setup-recommended-)
+  - [Manual Setup (Alternative)](#manual-setup-alternative)
+  - [Access the Application](#access-the-application)
 - [Available Commands](#-available-commands)
 - [Development Workflow](#-development-workflow)
 - [Configuration Reference](#-configuration-reference)
@@ -81,24 +78,51 @@ corepack prepare pnpm@9.15.0 --activate
 
 ---
 
-### Step 1: Clone the Repository
+### Quick Setup (Recommended) ⚡
+
+Run the automated setup script that handles everything:
+
+```bash
+git clone https://github.com/yourusername/angular-symfony-boilerplate.git
+cd angular-symfony-boilerplate
+pnpm run setup
+```
+
+This script will:
+1. ✅ Check prerequisites (Docker, pnpm)
+2. ✅ Create `.env` from `.env.example` with auto-generated secrets
+3. ✅ Build Docker images (skips if already built)
+4. ✅ Start all containers
+5. ✅ Generate JWT keys (skips if already exist)
+6. ✅ Verify everything is running
+
+**Running again?** The script is idempotent - it skips completed steps.
+
+**Force rebuild?** Use `pnpm run setup:rebuild`
+
+---
+
+### Manual Setup (Alternative)
+
+<details>
+<summary>Click to expand manual setup steps</summary>
+
+#### Step 1: Clone the Repository
 
 ```bash
 git clone https://github.com/yourusername/angular-symfony-boilerplate.git
 cd angular-symfony-boilerplate
 ```
 
----
+#### Step 2: Configure Environment Variables
 
-### Step 2: Configure Environment Variables
-
-#### 2.1 Copy the environment template
+##### 2.1 Copy the environment template
 
 ```bash
 cp application/api/.env.example application/api/.env
 ```
 
-#### 2.2 Generate APP_SECRET
+##### 2.2 Generate APP_SECRET
 
 Generate a secure random string for Symfony:
 
@@ -116,7 +140,7 @@ Copy the output and update `application/api/.env`:
 APP_SECRET=your_generated_32_character_string_here
 ```
 
-#### 2.3 Set JWT_PASSPHRASE
+##### 2.3 Set JWT_PASSPHRASE
 
 Generate a passphrase for JWT authentication:
 
@@ -141,9 +165,7 @@ JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
 JWT_PASSPHRASE=your_generated_passphrase_here
 ```
 
----
-
-### Step 3: Build and Start Docker
+#### Step 3: Build and Start Docker
 
 ```bash
 # Build all Docker images (first time or after Dockerfile changes)
@@ -159,9 +181,7 @@ Wait for all containers to start. You can check the logs:
 pnpm run dev:logs
 ```
 
----
-
-### Step 4: Generate JWT Keys
+#### Step 4: Generate JWT Keys
 
 After Docker is running, generate the JWT keypair inside the container:
 
@@ -175,9 +195,7 @@ This creates:
 
 > **Note:** These files are gitignored and must be generated on each new setup.
 
----
-
-### Step 5: Run Database Migrations (Optional)
+#### Step 5: Run Database Migrations (Optional)
 
 If your project has database migrations:
 
@@ -185,9 +203,11 @@ If your project has database migrations:
 pnpm run api:migrate
 ```
 
+</details>
+
 ---
 
-### Step 6: Access the Application
+### Access the Application
 
 | Service | URL | Description |
 |---------|-----|-------------|
@@ -207,11 +227,15 @@ Your development environment is now ready. The Angular frontend will hot-reload 
 
 | Command | Description |
 |---------|-------------|
+| `pnpm run setup` | **One-command setup** (idempotent) |
+| `pnpm run setup:rebuild` | Setup with forced Docker rebuild |
 | `pnpm run dev` | Start all Docker services |
 | `pnpm run dev:logs` | View Docker logs |
 | `pnpm run dev:stop` | Stop all services |
 | `pnpm run docker:build` | Rebuild images (no cache) |
 | `pnpm run docker:clean` | Remove all containers, images & volumes |
+| `pnpm run cleanup` | Clean Docker resources |
+| `pnpm run cleanup:all` | **Full reset** (removes .env, keys, node_modules) |
 | `pnpm run api:cache:clear` | Clear Symfony cache |
 | `pnpm run api:migrate` | Run database migrations |
 

@@ -4,16 +4,20 @@
   "private": true,
   "description": "Angular + Symfony Monorepo Boilerplate",
   "scripts": {
+    "setup": "bash scripts/setup.sh",
+    "setup:rebuild": "bash scripts/setup.sh --rebuild",
     "dev": "docker compose up -d",
     "dev:logs": "docker compose logs -f",
     "dev:stop": "docker compose down",
     "frontend": "pnpm --filter @app/frontend start",
     "frontend:build": "pnpm --filter @app/frontend build",
     "frontend:test": "pnpm --filter @app/frontend test",
-    "api:cache:clear": "docker exec angular-symfony-apache php bin/console cache:clear",
-    "api:migrate": "docker exec angular-symfony-apache php bin/console doctrine:migrations:migrate --no-interaction",
+    "api:cache:clear": "docker exec angular-symfony-apache bash -c 'cd /var/www/html/api && php bin/console cache:clear'",
+    "api:migrate": "docker exec angular-symfony-apache bash -c 'cd /var/www/html/api && php bin/console doctrine:migrations:migrate --no-interaction'",
     "docker:build": "docker compose build --no-cache",
-    "docker:clean": "docker compose down --rmi all -v"
+    "docker:clean": "docker compose down --rmi all -v",
+    "cleanup": "bash scripts/cleanup.sh",
+    "cleanup:all": "bash scripts/cleanup.sh --all"
   },
   "keywords": [
     "angular",
