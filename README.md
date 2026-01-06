@@ -1,6 +1,6 @@
 # Angular Symfony Monorepo Boilerplate
 
-A modern monorepo boilerplate with Angular 19 frontend and Symfony 7.1 backend API.
+A modern monorepo boilerplate with Angular 19 frontend and Symfony 7.1 backend API, fully containerized with Docker.
 
 ## 🚀 Architecture
 
@@ -29,6 +29,7 @@ angular-symfony-boilerplate/
 │       ├── src/
 │       ├── config/
 │       ├── public/
+│       ├── .env.example   # Environment template
 │       └── composer.json
 ├── docker-apache/         # PHP/Apache Docker config
 ├── docker-mysql/          # MySQL Docker config
@@ -37,32 +38,147 @@ angular-symfony-boilerplate/
 └── pnpm-workspace.yaml
 ```
 
-## 🛠️ Prerequisites
+---
 
+## 📋 Complete Setup Guide
+
+### Prerequisites
+
+Before starting, ensure you have installed:
+
+- **Docker Desktop** (includes Docker Compose)
 - **Node.js** >= 20.0.0
 - **pnpm** >= 9.0.0
-- **Docker** and **Docker Compose**
 
-## 🏁 Quick Start
+To install pnpm:
+```bash
+corepack enable
+corepack prepare pnpm@9.15.0 --activate
+```
 
-### 1. Clone and Start
+---
+
+### Step 1: Clone the Repository
 
 ```bash
 git clone https://github.com/yourusername/angular-symfony-boilerplate.git
 cd angular-symfony-boilerplate
+```
 
-# Build and start all services
+---
+
+### Step 2: Configure Environment Variables
+
+#### 2.1 Copy the environment template
+
+```bash
+cp application/api/.env.example application/api/.env
+```
+
+#### 2.2 Generate APP_SECRET
+
+Generate a secure random string for Symfony:
+
+```bash
+# On macOS/Linux
+openssl rand -hex 16
+
+# Or using PHP (if installed locally)
+php -r "echo bin2hex(random_bytes(16)) . PHP_EOL;"
+```
+
+Copy the output and update `application/api/.env`:
+
+```env
+APP_SECRET=your_generated_32_character_string_here
+```
+
+#### 2.3 Set JWT_PASSPHRASE
+
+Generate a passphrase for JWT authentication:
+
+```bash
+openssl rand -base64 32
+```
+
+Update `application/api/.env`:
+
+```env
+JWT_PASSPHRASE=your_generated_passphrase_here
+```
+
+Your `.env` file should now look like:
+
+```env
+APP_ENV=dev
+APP_SECRET=a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
+DATABASE_URL="mysql://app:app@mysql:3306/app?serverVersion=8.0&charset=utf8mb4"
+JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
+JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
+JWT_PASSPHRASE=your_generated_passphrase_here
+```
+
+---
+
+### Step 3: Build and Start Docker
+
+```bash
+# Build all Docker images (first time or after Dockerfile changes)
 pnpm run docker:build
+
+# Start all services
 pnpm run dev
 ```
 
-### 2. Access the Application
+Wait for all containers to start. You can check the logs:
+
+```bash
+pnpm run dev:logs
+```
+
+---
+
+### Step 4: Generate JWT Keys
+
+After Docker is running, generate the JWT keypair inside the container:
+
+```bash
+docker exec angular-symfony-apache php bin/console lexik:jwt:generate-keypair
+```
+
+This creates:
+- `application/api/config/jwt/private.pem`
+- `application/api/config/jwt/public.pem`
+
+> **Note:** These files are gitignored and must be generated on each new setup.
+
+---
+
+### Step 5: Run Database Migrations (Optional)
+
+If your project has database migrations:
+
+```bash
+pnpm run api:migrate
+```
+
+---
+
+### Step 6: Access the Application
 
 | Service | URL | Description |
 |---------|-----|-------------|
 | **Frontend** | http://localhost:4200 | Angular dev server (hot-reload) |
 | **API** | http://localhost:90 | Symfony backend |
-| **MySQL** | localhost:3307 | Database (user: app, pass: app) |
+| **MySQL** | localhost:3307 | Database (user: `app`, pass: `app`) |
+
+---
+
+## ✅ Setup Complete!
+
+Your development environment is now ready. The Angular frontend will hot-reload on code changes, and the Symfony API is accessible for backend development.
+
+---
 
 ## 📜 Available Commands
 
@@ -76,50 +192,7 @@ pnpm run dev
 | `pnpm run api:cache:clear` | Clear Symfony cache |
 | `pnpm run api:migrate` | Run database migrations |
 
-### Local Development (without Docker frontend)
-
-```bash
-# Run Angular locally instead of in Docker
-cd application/frontend
-pnpm install
-pnpm start
-```
-
-## 🔧 Configuration
-
-### Initial Setup
-
-The `.env` files are not committed. Copy the examples on first setup:
-
-```bash
-# API
-cp application/api/.env.example application/api/.env
-
-# Frontend (optional - for custom API URL)
-cp application/frontend/src/environments/environment.example.ts application/frontend/src/environments/environment.ts
-```
-
-**Note:** Docker automatically copies `.env.example` to `.env` during build if `.env` doesn't exist.
-
-### API Environment (.env)
-
-```env
-APP_ENV=dev
-APP_SECRET=your_secret_here
-DATABASE_URL="mysql://app:app@mysql:3306/app?serverVersion=8.0"
-```
-
-### Frontend Environment
-
-Configure API endpoints in `application/frontend/src/environments/`:
-
-```typescript
-// environment.ts
-export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:90/api'
-};
-```
+---
 
 ## 🏗️ Development Workflow
 
@@ -131,8 +204,14 @@ docker exec -it angular-symfony-apache bash
 
 # Inside container:
 cd /var/www/html/api
+
+# Create a controller
 php bin/console make:controller ApiController
+
+# Create an entity
 php bin/console make:entity User
+
+# Run migrations
 php bin/console doctrine:migrations:migrate
 ```
 
@@ -151,9 +230,43 @@ pnpm ng generate service services/MyService
 pnpm test
 ```
 
+### Local Frontend Development (without Docker)
+
+```bash
+cd application/frontend
+pnpm install
+pnpm start
+```
+
+---
+
+## 🔧 Configuration Reference
+
+### API Environment Variables
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `APP_ENV` | Environment mode | `dev` or `prod` |
+| `APP_SECRET` | Symfony secret key | 32-char hex string |
+| `DATABASE_URL` | Database connection | `mysql://user:pass@host:port/db` |
+| `JWT_PASSPHRASE` | JWT key passphrase | Random string |
+
+### Frontend Environment
+
+Edit `application/frontend/src/environments/environment.ts`:
+
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:90/api'
+};
+```
+
+---
+
 ## 📦 Updating Dependencies
 
-### Frontend
+### Frontend (Angular)
 
 ```bash
 cd application/frontend
@@ -161,7 +274,7 @@ pnpm ng update @angular/core @angular/cli
 pnpm update
 ```
 
-### Backend
+### Backend (Symfony)
 
 ```bash
 docker exec -it angular-symfony-apache bash
@@ -169,11 +282,44 @@ cd /var/www/html/api
 composer update
 ```
 
-## 🔒 Security
+---
 
-- JWT authentication pre-configured with `lexik/jwt-authentication-bundle`
-- CORS configured via `nelmio/cors-bundle`
-- Change default secrets before deploying to production
+## 🧹 Troubleshooting
+
+### Reset Everything
+
+```bash
+# Stop and remove all containers, images, and volumes
+pnpm run docker:clean
+
+# Rebuild from scratch
+pnpm run docker:build
+pnpm run dev
+```
+
+### Permission Issues
+
+```bash
+# Fix file permissions
+sudo chown -R $(whoami):$(whoami) application/
+```
+
+### Clear Symfony Cache
+
+```bash
+pnpm run api:cache:clear
+```
+
+---
+
+## 🔒 Security Notes
+
+- **Never commit `.env` files** - They contain secrets
+- **Generate unique secrets** for each environment
+- **JWT keys are gitignored** - Generate them on each setup
+- Change default database password in production
+
+---
 
 ## 📄 License
 
