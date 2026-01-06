@@ -79,7 +79,7 @@ echo ""
 echo -e "${YELLOW}[3/6] Building Docker images...${NC}"
 
 # Check if images exist
-if docker images | grep -q "angular-symfony-boilerplate-apache"; then
+if docker images | grep -q "angular-symfony-boilerplate-nginx"; then
     echo -e "${GREEN}✓ Docker images already built, skipping (use --rebuild to force)${NC}"
     if [ "$1" == "--rebuild" ]; then
         echo -e "${YELLOW}  Rebuilding due to --rebuild flag...${NC}"
@@ -95,7 +95,7 @@ fi
 echo ""
 echo -e "${YELLOW}[4/6] Starting Docker containers...${NC}"
 
-if docker ps | grep -q "angular-symfony-apache"; then
+if docker ps | grep -q "angular-symfony-nginx"; then
     echo -e "${GREEN}✓ Containers already running${NC}"
 else
     docker compose up -d
@@ -120,9 +120,9 @@ else
     JWT_PASS=$(grep JWT_PASSPHRASE application/api/.env | cut -d '=' -f2)
     
     # Try Symfony command first, fallback to openssl
-    if docker exec angular-symfony-apache php bin/console lexik:jwt:generate-keypair --skip-if-exists 2>/dev/null; then
+    if docker exec angular-symfony-nginx php bin/console lexik:jwt:generate-keypair --skip-if-exists 2>/dev/null; then
         echo -e "${GREEN}✓ JWT keys generated via Symfony${NC}"
-    elif docker exec angular-symfony-apache php bin/console lexik:jwt:generate-keypair 2>/dev/null; then
+    elif docker exec angular-symfony-nginx php bin/console lexik:jwt:generate-keypair 2>/dev/null; then
         echo -e "${GREEN}✓ JWT keys generated via Symfony${NC}"
     else
         # Fallback: Generate keys using openssl locally
@@ -134,7 +134,7 @@ else
             echo -e "${GREEN}✓ JWT keys generated via openssl${NC}"
         else
             echo -e "${YELLOW}  ⚠ JWT key generation failed. Run manually:${NC}"
-            echo -e "${YELLOW}    docker exec angular-symfony-apache php bin/console lexik:jwt:generate-keypair${NC}"
+            echo -e "${YELLOW}    docker exec angular-symfony-nginx php bin/console lexik:jwt:generate-keypair${NC}"
         fi
     fi
 fi

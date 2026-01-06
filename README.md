@@ -32,7 +32,7 @@ A modern monorepo boilerplate with Angular 19 frontend and Symfony 7.1 backend A
 │   (Angular)     │   (Symfony)     │        (MySQL)          │
 │                 │                 │                         │
 │  localhost:4200 │  localhost:90   │     localhost:3307      │
-│   Node.js 20    │  PHP 8.3/Apache │        MySQL 8          │
+│   Node.js 20    │  PHP 8.3/Nginx  │        MySQL 8          │
 └─────────────────┴─────────────────┴─────────────────────────┘
 ```
 
@@ -51,7 +51,7 @@ angular-symfony-boilerplate/
 │       ├── public/
 │       ├── .env.example   # Environment template
 │       └── composer.json
-├── docker-apache/         # PHP/Apache Docker config
+├── docker-nginx/          # PHP-FPM/Nginx Docker config
 ├── docker-mysql/          # MySQL Docker config
 ├── compose.yml
 ├── package.json           # Root with pnpm workspaces
@@ -186,7 +186,7 @@ pnpm run dev:logs
 After Docker is running, generate the JWT keypair inside the container:
 
 ```bash
-docker exec angular-symfony-apache php bin/console lexik:jwt:generate-keypair
+docker exec angular-symfony-nginx php bin/console lexik:jwt:generate-keypair
 ```
 
 This creates:
@@ -247,7 +247,7 @@ Your development environment is now ready. The Angular frontend will hot-reload 
 
 ```bash
 # Access container shell
-docker exec -it angular-symfony-apache bash
+docker exec -it angular-symfony-nginx bash
 
 # Inside container:
 cd /var/www/html/api
@@ -324,7 +324,7 @@ pnpm update
 ### Backend (Symfony)
 
 ```bash
-docker exec -it angular-symfony-apache bash
+docker exec -it angular-symfony-nginx bash
 cd /var/www/html/api
 composer update
 ```

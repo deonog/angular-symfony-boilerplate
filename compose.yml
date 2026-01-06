@@ -1,15 +1,14 @@
 services:
-  apache:
-    container_name: angular-symfony-apache
+  nginx:
+    container_name: angular-symfony-nginx
     build:
       context: ./
-      dockerfile: ./docker-apache/Dockerfile
+      dockerfile: ./docker-nginx/Dockerfile
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
       - mysql
     ports:
-      - "8888:8888"
       - "90:80"
       - "22:22"
     volumes:
@@ -48,7 +47,7 @@ services:
       - "4200:4200"
     command: sh -c "corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install && pnpm run start"
     depends_on:
-      - apache
+      - nginx
 
 volumes:
   mysql_data:
