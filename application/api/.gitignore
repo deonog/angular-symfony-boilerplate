@@ -5,10 +5,12 @@
 /var/
 /public/bundles/
 
-# Environment
+# Environment (keep .env.example)
+/.env
 /.env.local
 /.env.local.php
 /.env.*.local
+!/.env.example
 
 # Secrets
 /config/secrets/prod/prod.decrypt.private.php

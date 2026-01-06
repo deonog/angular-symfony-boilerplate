@@ -48,6 +48,9 @@ COPY --chown=user:user ./application/api /var/www/html/api/
 # Set environment for development
 ENV APP_ENV=dev
 
+# Copy .env.example to .env if it doesn't exist
+RUN cd /var/www/html/api && cp -n .env.example .env 2>/dev/null || true
+
 # Install Composer dependencies
 RUN cd /var/www/html/api && composer update --no-interaction --optimize-autoloader
 

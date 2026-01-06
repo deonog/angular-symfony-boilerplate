@@ -87,6 +87,20 @@ pnpm start
 
 ## 🔧 Configuration
 
+### Initial Setup
+
+The `.env` files are not committed. Copy the examples on first setup:
+
+```bash
+# API
+cp application/api/.env.example application/api/.env
+
+# Frontend (optional - for custom API URL)
+cp application/frontend/src/environments/environment.example.ts application/frontend/src/environments/environment.ts
+```
+
+**Note:** Docker automatically copies `.env.example` to `.env` during build if `.env` doesn't exist.
+
 ### API Environment (.env)
 
 ```env
