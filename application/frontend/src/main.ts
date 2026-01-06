@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http';
 import {
   importProvidersFrom,
-  provideExperimentalZonelessChangeDetection,
+  provideZonelessChangeDetection,
 } from '@angular/core';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
@@ -38,7 +38,7 @@ const MY_FORMATS = {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideExperimentalZonelessChangeDetection(),
+    provideZonelessChangeDetection(),
     importProvidersFrom(BrowserModule, CKEditorModule),
     CurrencyPipe,
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },

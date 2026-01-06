@@ -1,6 +1,6 @@
 # Angular Symfony Monorepo Boilerplate
 
-A modern monorepo boilerplate with Angular 19 frontend and Symfony 7.1 backend API, fully containerized with Docker.
+A modern monorepo boilerplate with Angular 21 frontend and Symfony 8.0 backend API, fully containerized with Docker.
 
 ## 📑 Table of Contents
 
@@ -16,7 +16,6 @@ A modern monorepo boilerplate with Angular 19 frontend and Symfony 7.1 backend A
 - [Configuration Reference](#-configuration-reference)
 - [Updating Dependencies](#-updating-dependencies)
 - [Troubleshooting](#-troubleshooting)
-- [Known Issues](#-known-issues)
 - [Security Notes](#-security-notes)
 - [License](#-license)
 
@@ -32,7 +31,7 @@ A modern monorepo boilerplate with Angular 19 frontend and Symfony 7.1 backend A
 │   (Angular)     │   (Symfony)     │        (MySQL)          │
 │                 │                 │                         │
 │  localhost:4200 │  localhost:90   │     localhost:3307      │
-│   Node.js 20    │  PHP 8.3/Nginx  │        MySQL 8          │
+│   Node.js 20    │  PHP 8.4/Nginx  │        MySQL 8          │
 └─────────────────┴─────────────────┴─────────────────────────┘
 ```
 
@@ -41,11 +40,11 @@ A modern monorepo boilerplate with Angular 19 frontend and Symfony 7.1 backend A
 ```
 angular-symfony-boilerplate/
 ├── application/
-│   ├── frontend/          # Angular 19 application
+│   ├── frontend/          # Angular 21 application
 │   │   ├── src/
 │   │   ├── angular.json
 │   │   └── package.json
-│   └── api/               # Symfony 7.1 API
+│   └── api/               # Symfony 8.0 API
 │       ├── src/
 │       ├── config/
 │       ├── public/
@@ -356,29 +355,6 @@ sudo chown -R $(whoami):$(whoami) application/
 ```bash
 pnpm run api:cache:clear
 ```
-
----
-
-## ⚠️ Known Issues
-
-### Symfony Security Advisory (Temporary)
-
-This boilerplate currently includes a temporary workaround for Symfony security advisories affecting `symfony/http-foundation`. The following advisories are ignored in `composer.json`:
-
-```json
-"audit": {
-    "ignore": [
-        "PKSA-365x-2zjk-pt47",
-        "PKSA-b35n-565h-rs4q"
-    ]
-}
-```
-
-**Action Required:** Once Symfony releases patched versions, you should:
-
-1. Remove the `audit.ignore` section from `application/api/composer.json`
-2. Run `composer update` to get the patched packages
-3. Check [Packagist Security Advisories](https://packagist.org/security-advisories/) for updates
 
 ---
 
