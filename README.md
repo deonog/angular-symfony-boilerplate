@@ -312,12 +312,36 @@ pnpm run api:cache:clear
 
 ---
 
+## ⚠️ Known Issues
+
+### Symfony Security Advisory (Temporary)
+
+This boilerplate currently includes a temporary workaround for Symfony security advisories affecting `symfony/http-foundation`. The following advisories are ignored in `composer.json`:
+
+```json
+"audit": {
+    "ignore": [
+        "PKSA-365x-2zjk-pt47",
+        "PKSA-b35n-565h-rs4q"
+    ]
+}
+```
+
+**Action Required:** Once Symfony releases patched versions, you should:
+
+1. Remove the `audit.ignore` section from `application/api/composer.json`
+2. Run `composer update` to get the patched packages
+3. Check [Packagist Security Advisories](https://packagist.org/security-advisories/) for updates
+
+---
+
 ## 🔒 Security Notes
 
 - **Never commit `.env` files** - They contain secrets
 - **Generate unique secrets** for each environment
 - **JWT keys are gitignored** - Generate them on each setup
 - Change default database password in production
+- **Review security advisories** regularly and update dependencies
 
 ---
 
