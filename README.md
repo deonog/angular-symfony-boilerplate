@@ -2,6 +2,29 @@
 
 A modern monorepo boilerplate with Angular 19 frontend and Symfony 7.1 backend API, fully containerized with Docker.
 
+## 📑 Table of Contents
+
+- [Architecture](#-architecture)
+- [Project Structure](#-project-structure)
+- [Complete Setup Guide](#-complete-setup-guide)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Clone the Repository](#step-1-clone-the-repository)
+  - [Step 2: Configure Environment Variables](#step-2-configure-environment-variables)
+  - [Step 3: Build and Start Docker](#step-3-build-and-start-docker)
+  - [Step 4: Generate JWT Keys](#step-4-generate-jwt-keys)
+  - [Step 5: Run Database Migrations](#step-5-run-database-migrations-optional)
+  - [Step 6: Access the Application](#step-6-access-the-application)
+- [Available Commands](#-available-commands)
+- [Development Workflow](#-development-workflow)
+- [Configuration Reference](#-configuration-reference)
+- [Updating Dependencies](#-updating-dependencies)
+- [Troubleshooting](#-troubleshooting)
+- [Known Issues](#-known-issues)
+- [Security Notes](#-security-notes)
+- [License](#-license)
+
+---
+
 ## 🚀 Architecture
 
 ```
