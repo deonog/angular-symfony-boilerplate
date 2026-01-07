@@ -104,11 +104,25 @@ else
     echo -e "${GREEN}✓ Containers started${NC}"
 fi
 
-# Step 5: Generate JWT keys
+# Step 5: Install Composer dependencies if needed
 echo ""
-echo -e "${YELLOW}[5/6] Setting up JWT keys...${NC}"
+echo -e "${YELLOW}[5/7] Checking Composer dependencies...${NC}"
 
-if [ -f "application/api/config/jwt/private.pem" ]; then
+# Check if vendor autoload exists inside container
+if docker exec angular-symfony-nginx test -f /var/www/html/api/vendor/autoload.php 2>/dev/null; then
+    echo -e "${GREEN}✓ Composer dependencies already installed${NC}"
+else
+    echo -e "${BLUE}  Installing Composer dependencies...${NC}"
+    docker exec angular-symfony-nginx bash -c 'cd /var/www/html/api && composer install --no-interaction' 2>/dev/null
+    echo -e "${GREEN}✓ Composer dependencies installed${NC}"
+fi
+
+# Step 6: Generate JWT keys
+echo ""
+echo -e "${YELLOW}[6/7] Setting up JWT keys...${NC}"
+
+# Check if JWT keys exist inside container or locally
+if docker exec angular-symfony-nginx test -f /var/www/html/api/config/jwt/private.pem 2>/dev/null || [ -f "application/api/config/jwt/private.pem" ]; then
     echo -e "${GREEN}✓ JWT keys already exist, skipping${NC}"
 else
     echo -e "${BLUE}  Generating JWT keypair...${NC}"
@@ -120,9 +134,9 @@ else
     JWT_PASS=$(grep JWT_PASSPHRASE application/api/.env | cut -d '=' -f2)
     
     # Try Symfony command first, fallback to openssl
-    if docker exec angular-symfony-nginx php bin/console lexik:jwt:generate-keypair --skip-if-exists 2>/dev/null; then
+    if docker exec angular-symfony-nginx bash -c 'cd /var/www/html/api && php bin/console lexik:jwt:generate-keypair --skip-if-exists' 2>/dev/null; then
         echo -e "${GREEN}✓ JWT keys generated via Symfony${NC}"
-    elif docker exec angular-symfony-nginx php bin/console lexik:jwt:generate-keypair 2>/dev/null; then
+    elif docker exec angular-symfony-nginx bash -c 'cd /var/www/html/api && php bin/console lexik:jwt:generate-keypair' 2>/dev/null; then
         echo -e "${GREEN}✓ JWT keys generated via Symfony${NC}"
     else
         # Fallback: Generate keys using openssl locally
@@ -139,9 +153,9 @@ else
     fi
 fi
 
-# Step 6: Final checks
+# Step 7: Final checks
 echo ""
-echo -e "${YELLOW}[6/6] Verifying setup...${NC}"
+echo -e "${YELLOW}[7/7] Verifying setup...${NC}"
 
 # Wait a bit more for services to be fully ready
 sleep 3
